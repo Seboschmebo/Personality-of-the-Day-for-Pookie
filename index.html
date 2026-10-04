@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mommy’s Good Boy 🎀</title>
+<style>
+:root{
+  --bg:#120b15; --panel:#1b111d; --accent:#ff72ad; --accent2:#ffc1dc;
+  --blue:#8ecbff; --blue2:#c7e7ff; --text:#fff7fc; --muted:#d2b6c6;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; font-family:Inter,system-ui,Segoe UI,sans-serif;
+  color:var(--text); background:
+  radial-gradient(circle at 25% 10%, #5a203f 0%, transparent 34%),
+  radial-gradient(circle at 85% 85%, #183b62 0%, transparent 32%), var(--bg);
+  display:flex; align-items:center; justify-content:center; padding:24px;
+}
+.app{width:min(1100px,100%); display:grid; grid-template-columns:1fr 360px; gap:28px; align-items:center}
+.card{
+  background:linear-gradient(145deg,rgba(20,25,38,.94),rgba(10,13,22,.94));
+  border:1px solid rgba(255,114,173,.28); border-radius:28px;
+  box-shadow:0 25px 80px rgba(0,0,0,.5),0 0 45px rgba(255,114,173,.08); padding:26px;
+  backdrop-filter:blur(12px);
+}
+h1{margin:0 0 5px;font-size:clamp(28px,4vw,44px);background:linear-gradient(90deg,#ff9ac4,#fff,#9ed5ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--muted);margin:0 0 8px}
+.wheelWrap{position:relative;width:min(650px,88vw);aspect-ratio:1;margin:auto}
+canvas{width:100%;height:100%;display:block}
+.pointer{
+  position:absolute; top:-3px; left:50%; transform:translateX(-50%);
+  width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;
+  border-top:0;border-bottom:38px solid #fff; filter:drop-shadow(0 3px 8px #000);
+  z-index:3;
+}
+.spin{
+  display:block;margin:20px auto 0; border:0; border-radius:999px; padding:15px 42px;
+  font-size:18px;font-weight:800;color:#071018; background:linear-gradient(135deg,var(--accent2),var(--accent));
+  cursor:pointer; box-shadow:0 10px 30px rgba(255,114,173,.25); transition:.15s;
+}
+.spin:hover{transform:translateY(-2px);box-shadow:0 14px 38px rgba(142,216,255,.3)}
+.spin:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.result{text-align:center;margin-top:20px;min-height:92px}
+.result .label{color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:2px}
+.result h2{margin:5px 0;font-size:30px;color:var(--accent2)}
+.result p{margin:0;color:var(--muted)}
+.list{max-height:610px;overflow:auto;padding-right:5px}
+.person{
+  display:flex;gap:10px;align-items:center;padding:9px 10px;margin:4px 0;
+  border-radius:12px;background:rgba(255,255,255,.035);color:#dce5ef;font-size:14px
+}
+.num{color:var(--accent);font-weight:800;width:25px}
+@media(max-width:850px){.app{grid-template-columns:1fr}.list{max-height:300px}}
+
+.mommyTag{display:inline-block;margin:0 0 18px;padding:7px 14px;border-radius:999px;
+border:1px solid rgba(255,193,220,.35);background:rgba(255,114,173,.09);
+color:#ffc9df;font-size:13px;font-weight:700;letter-spacing:.04em}
+</style>
+
+<style>
+  :root{
+    --mommy-pink:#ff6fae;
+    --mommy-pink-soft:#ffb7d5;
+    --mommy-rose:#c83f76;
+    --goodboy-blue:#79bfff;
+    --goodboy-deep:#16233f;
+    --cream:#fff7fb;
+  }
+  body{
+    background:
+      radial-gradient(circle at 15% 15%, rgba(255,111,174,.16), transparent 28%),
+      radial-gradient(circle at 85% 20%, rgba(121,191,255,.14), transparent 28%),
+      linear-gradient(135deg,#100d17 0%,#1b1220 48%,#101827 100%);
+  }
+  .container{
+    border-color:rgba(255,111,174,.34) !important;
+    box-shadow:0 0 45px rgba(255,111,174,.10),0 0 45px rgba(121,191,255,.08) !important;
+  }
+  h1{
+    background:linear-gradient(90deg,var(--mommy-pink-soft),#fff,var(--goodboy-blue));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent !important;
+    text-shadow:0 0 24px rgba(255,111,174,.18);
+  }
+  .subtitle{color:#e9c9d9 !important}
+  button,.spin-btn{
+    background:linear-gradient(135deg,#ff5f9d,#c83f76) !important;
+    border-color:#ff9bc3 !important;
+    box-shadow:0 0 22px rgba(255,95,157,.28) !important;
+  }
+  button:hover,.spin-btn:hover{
+    filter:brightness(1.08);
+    transform:translateY(-1px);
+  }
+  .winner{
+    border-color:rgba(255,111,174,.42) !important;
+    background:linear-gradient(145deg,rgba(255,111,174,.11),rgba(121,191,255,.08)) !important;
+  }
+  .winner .name{color:#ffb7d5 !important}
+  .personality-list .item:hover{
+    border-color:rgba(255,111,174,.35) !important;
+    background:rgba(255,111,174,.06) !important;
+  }
+  .badge{
+    background:rgba(121,191,255,.12) !important;
+    border-color:rgba(121,191,255,.30) !important;
+    color:#b9dcff !important;
+  }
+  .mommy-tag{
+    display:inline-block;
+    margin:10px 0 0;
+    padding:7px 14px;
+    border-radius:999px;
+    border:1px solid rgba(255,183,213,.35);
+    background:rgba(255,111,174,.08);
+    color:#ffc8df;
+    font-size:.82rem;
+    letter-spacing:.04em;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <section class="card">
+    <h1>🎀 Mommy’s Good Boy 🎀</h1>
+    <p class="sub">Mommy entscheidet, welcher Good Boy heute zum Vorschein kommt. 💗</p><div class="mommyTag">👑 MOMMY’S RULES · 💙 GOOD BOY’S WHEEL</div><div class="mommy-tag">💗 Mommy’s rules · Good Boy’s wheel 💙</div>
+    <div class="wheelWrap">
+      <div class="pointer"></div>
+      <canvas id="wheel" width="900" height="900"></canvas>
+    </div>
+    <button class="spin" id="spin">DREHEN</button>
+    <div style="text-align:center;color:#9ba8b8;margin-top:12px;font-size:13px">
+      Spin #<span id="spinCount">0</span> · Bonus bei jedem 10. Spin
+    </div>
+    <div class="result">
+      <div class="label">Heute bist du …</div>
+      <h2 id="winner">Noch nicht gedreht</h2>
+      <p id="desc">Lass das Rad entscheiden.</p>
+    </div>
+  </section>
+
+  <aside class="card">
+    <h2>Die 30 Gaming-Persönlichkeiten</h2>
+    <p class="sub">Jede Persönlichkeit verändert deine Art zu spielen.</p>
+    <div class="list" id="list"></div>
+  </aside>
+</div>
+
+<script>
+const personalities = [
+  ["Der Tryhard", "Maximal ernst spielen. Jeder Move wird optimiert und Fehler werden nicht akzeptiert."],
+  ["Der Troll", "Die anderen spielerisch ärgern, ohne wirklich toxisch zu werden."],
+  ["Der Flirty", "Charmant, frech und leicht flirtend kommentieren – auch mitten im Match."],
+  ["Der Freaky", "Komplett wilde, unerwartete Aussagen und Reaktionen raushauen."],
+  ["Der Shotcaller", "Alle Entscheidungen treffen und dem Team klare Ansagen geben."],
+  ["Der Bodyguard", "Eine bestimmte Person um jeden Preis beschützen und begleiten."],
+  ["Der Simp", "Eine Person übertrieben hypen, loben und unterstützen."],
+  ["Der Pazifist", "Kämpfe möglichst vermeiden und friedliche Lösungen suchen."],
+  ["Der Berserker", "Jeden möglichen Fight suchen und niemals zurückweichen."],
+  ["Der Loot-Goblin", "Alles einsammeln, was nicht festgeschraubt ist – Loot vor allem anderen."],
+  ["Der Speedrunner", "Alles so schnell wie möglich erledigen, ohne unnötige Umwege."],
+  ["Der Sniper", "Wo möglich auf Distanz bleiben und aus sicherer Position spielen."],
+  ["Der Messerheld", "Wenn das Spiel Nahkampf erlaubt: möglichst mit Nahkampfwaffen kämpfen."],
+  ["Der Risiko-Junkie", "Immer die riskantere Option wählen – je gefährlicher, desto besser."],
+  ["Der Support", "Den Fokus komplett auf die anderen legen: helfen, heilen, retten und absichern."],
+  ["Der Lone Wolf", "Möglichst alleine agieren und eigene Wege gehen."],
+  ["Der Clown", "Hauptsache Unterhaltung: absurde Aktionen und lustige Situationen erzeugen."],
+  ["Der Kommentator", "Das komplette Spiel wie ein Sportmoderator kommentieren."],
+  ["Der Coach", "Einen Mitspieler aktiv coachen und ihm während des Spiels Tipps geben."],
+  ["Der Anfänger", "Absichtlich wie ein kompletter Anfänger spielen und möglichst planlos wirken."],
+  ["Der Profi", "Übertrieben professionell auftreten, als wäre es ein großes E-Sport-Finale."],
+  ["Der Meme-Lord", "Fast ausschließlich mit Memes, Running Gags und passenden Sprüchen kommunizieren."],
+  ["Der Geheimagent", "Pläne geheim halten, mysteriös bleiben und Informationen nur teilweise preisgeben."],
+  ["Der Diplomat", "Streit vermeiden, verhandeln und versuchen, andere von sich zu überzeugen."],
+  ["Der Chaos-Spieler", "Entscheidungen möglichst zufällig treffen und den Plan ständig ändern."],
+  ["Der Ehrenmann", "Anderen helfen, selbst wenn es den eigenen Erfolg deutlich erschwert."],
+  ["Der Freche", "Besonders schlagfertig, frech und provokant auftreten."],
+  ["Der Romantiker", "Übertrieben romantische Kommentare und Komplimente einbauen."],
+  ["Der Eifersüchtige", "Spielerisch eifersüchtig reagieren, wenn jemand anderes Aufmerksamkeit bekommt."],
+  ["Der Unberechenbare", "Während der Runde ständig unerwartete Entscheidungen treffen und niemanden wissen lassen, was als Nächstes kommt."]
+];
+
+const canvas=document.getElementById("wheel"), ctx=canvas.getContext("2d");
+const n=personalities.length, arc=Math.PI*2/n, colors=[];
+for(let i=0;i<n;i++) colors.push(`hsl(${190 + (i*137)%150} 70% ${i%2?28:35}%)`);
+
+let rotation=0, spinning=false;
+let spinCount=Number(localStorage.getItem("personalitySpinCount")||0);
+const bonuses=[
+  ["💸 5€-Bonus","Du zahlst 5 € für etwas ihrer Wahl."],
+  ["🍕 Essen geht auf dich","Sie darf sich etwas zu essen aussuchen – du zahlst."],
+  ["🎁 Wunsch-Geschenk","Sie darf sich eine Kleinigkeit bis 15 € aussuchen."],
+  ["🎮 Game ihrer Wahl","Sie bestimmt, was ihr heute zusammen spielt."],
+  ["🎬 Film-/Serienwahl","Sie entscheidet, was ihr gemeinsam schaut."],
+  ["☕ Verwöhn-Bonus","Du spendierst ihr ihr Lieblingsgetränk."],
+  ["👑 Königin für einen Tag","Sie darf heute eine kleine Entscheidung bestimmen."],
+  ["💌 Süße Nachricht","Du musst ihr eine richtig süße Nachricht schreiben."],
+  ["🍦 Dessert-Bonus","Sie bekommt ein Dessert ihrer Wahl von dir."],
+  ["💎 Mega-Bonus","Sie bekommt einen Bonus ihrer Wahl bis 25 €."]
+];
+function draw(){
+  const cx=450,cy=450,r=425;
+  ctx.clearRect(0,0,900,900);
+  ctx.save(); ctx.translate(cx,cy); ctx.rotate(rotation);
+  for(let i=0;i<n;i++){
+    const a=i*arc-Math.PI/2;
+    ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r,a,a+arc);ctx.closePath();
+    ctx.fillStyle=colors[i];ctx.fill();
+    ctx.strokeStyle="rgba(255,255,255,.16)";ctx.lineWidth=2;ctx.stroke();
+    ctx.save();ctx.rotate(a+arc/2);ctx.textAlign="right";ctx.fillStyle="#f5fbff";
+    ctx.font="700 16px system-ui";
+    let name=personalities[i][0].replace("Die ","");
+    if(name.length>17) name=name.slice(0,16)+"…";
+    ctx.fillText(name,r-22,6);ctx.restore();
+  }
+  ctx.beginPath();ctx.arc(0,0,72,0,Math.PI*2);ctx.fillStyle="#0a101a";ctx.fill();
+  ctx.strokeStyle="#8ed8ff";ctx.lineWidth=5;ctx.stroke();
+  ctx.fillStyle="#dff7ff";ctx.font="800 19px system-ui";ctx.textAlign="center";ctx.fillText("SPIN",0,7);
+  ctx.restore();
+}
+draw();
+
+document.getElementById("spinCount").textContent=spinCount;
+const list=document.getElementById("list");
+personalities.forEach((p,i)=>{
+  const d=document.createElement("div");d.className="person";
+  d.innerHTML=`<span class="num">${String(i+1).padStart(2,"0")}</span><span>${p[0]}</span>`;
+  list.appendChild(d);
+});
+
+function winnerIndex(){
+  const normalized=(((-rotation)%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+  return Math.floor(normalized/arc)%n;
+}
+document.getElementById("spin").onclick=()=>{
+  if(spinning)return;
+  spinning=true;
+  const btn=document.getElementById("spin");btn.disabled=true;
+  document.getElementById("winner").textContent="…";
+  document.getElementById("desc").textContent="Das Schicksal entscheidet.";
+  const target=Math.floor(Math.random()*n);
+  const current=((rotation%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+  const targetRot=(Math.PI*2-target*arc-arc/2)+Math.PI*2*5;
+  const start=rotation, end=rotation + (targetRot-current);
+  const duration=5200, t0=performance.now();
+  function anim(now){
+    const t=Math.min(1,(now-t0)/duration);
+    const eased=1-Math.pow(1-t,4);
+    rotation=start+(end-start)*eased; draw();
+    if(t<1)requestAnimationFrame(anim);else{
+      rotation=end;draw();
+      spinCount++;
+      localStorage.setItem("personalitySpinCount",spinCount);
+      document.getElementById("spinCount").textContent=spinCount;
+      document.getElementById("winner").textContent=personalities[target][0];
+      document.getElementById("desc").textContent=personalities[target][1];
+
+      // Jeder 10. Spin löst zusätzlich einen Bonus aus.
+      if(spinCount % 10 === 0){
+        const bonus=bonuses[(spinCount/10-1)%bonuses.length];
+        setTimeout(()=>{
+          document.getElementById("winner").textContent="🎉 🎀 MOMMY-BONUS! "+bonus[0];
+          document.getElementById("desc").textContent=bonus[1]+" (Spin #"+spinCount+")";
+        },500);
+      }
+
+      spinning=false;btn.disabled=false;
+    }
+  }
+  requestAnimationFrame(anim);
+};
+</script>
+</body>
+</html>
