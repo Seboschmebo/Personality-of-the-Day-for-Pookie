@@ -53,12 +53,75 @@ canvas{width:100%;height:100%;display:block}
 .num{color:var(--accent);font-weight:800;width:25px}
 @media(max-width:850px){.app{grid-template-columns:1fr}.list{max-height:300px}}
 </style>
+
+<style>
+  :root{
+    --mommy-pink:#ff6fae;
+    --mommy-pink-soft:#ffb7d5;
+    --mommy-rose:#c83f76;
+    --goodboy-blue:#79bfff;
+    --goodboy-deep:#16233f;
+    --cream:#fff7fb;
+  }
+  body{
+    background:
+      radial-gradient(circle at 15% 15%, rgba(255,111,174,.16), transparent 28%),
+      radial-gradient(circle at 85% 20%, rgba(121,191,255,.14), transparent 28%),
+      linear-gradient(135deg,#100d17 0%,#1b1220 48%,#101827 100%);
+  }
+  .container{
+    border-color:rgba(255,111,174,.34) !important;
+    box-shadow:0 0 45px rgba(255,111,174,.10),0 0 45px rgba(121,191,255,.08) !important;
+  }
+  h1{
+    background:linear-gradient(90deg,var(--mommy-pink-soft),#fff,var(--goodboy-blue));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent !important;
+    text-shadow:0 0 24px rgba(255,111,174,.18);
+  }
+  .subtitle{color:#e9c9d9 !important}
+  button,.spin-btn{
+    background:linear-gradient(135deg,#ff5f9d,#c83f76) !important;
+    border-color:#ff9bc3 !important;
+    box-shadow:0 0 22px rgba(255,95,157,.28) !important;
+  }
+  button:hover,.spin-btn:hover{
+    filter:brightness(1.08);
+    transform:translateY(-1px);
+  }
+  .winner{
+    border-color:rgba(255,111,174,.42) !important;
+    background:linear-gradient(145deg,rgba(255,111,174,.11),rgba(121,191,255,.08)) !important;
+  }
+  .winner .name{color:#ffb7d5 !important}
+  .personality-list .item:hover{
+    border-color:rgba(255,111,174,.35) !important;
+    background:rgba(255,111,174,.06) !important;
+  }
+  .badge{
+    background:rgba(121,191,255,.12) !important;
+    border-color:rgba(121,191,255,.30) !important;
+    color:#b9dcff !important;
+  }
+  .mommy-tag{
+    display:inline-block;
+    margin:10px 0 0;
+    padding:7px 14px;
+    border-radius:999px;
+    border:1px solid rgba(255,183,213,.35);
+    background:rgba(255,111,174,.08);
+    color:#ffc8df;
+    font-size:.82rem;
+    letter-spacing:.04em;
+  }
+</style>
 </head>
 <body>
 <div class="app">
   <section class="card">
-    <h1>🎡 Personality of the Day</h1>
-    <p class="sub">Welche Persönlichkeit bekommt heute das Kommando?</p>
+    <h1>🎀 Mommy’s Good Boy 🎀</h1>
+    <p class="sub">Welche Persönlichkeit musst du heute beim Zocken spielen?</p><div class="mommy-tag">💗 Mommy’s rules · Good Boy’s wheel 💙</div>
     <div class="wheelWrap">
       <div class="pointer"></div>
       <canvas id="wheel" width="900" height="900"></canvas>
@@ -75,44 +138,44 @@ canvas{width:100%;height:100%;display:block}
   </section>
 
   <aside class="card">
-    <h2>Die 30 Persönlichkeiten</h2>
-    <p class="sub">Jede Persönlichkeit ist einmal auf dem Rad.</p>
+    <h2>Die 30 Gaming-Persönlichkeiten</h2>
+    <p class="sub">Jede Persönlichkeit verändert deine Art zu spielen.</p>
     <div class="list" id="list"></div>
   </aside>
 </div>
 
 <script>
 const personalities = [
-  ["Die Chaotin","Alles gleichzeitig, nichts nach Plan."],
-  ["Die Drama Queen","Aus einer Kleinigkeit wird eine Netflix-Serie."],
-  ["Die Eiskönigin","Gefühle? Heute leider ausverkauft."],
-  ["Die Kuschelmaus","Heute wird jeder gedrückt."],
-  ["Die Aggressive","Heute lieber nicht provozieren."],
-  ["Die Flirtmaschine","Jeder Blick ist eine Einladung."],
-  ["Die Gamerin","Real Life hat heute Wartungsarbeiten."],
-  ["Die Schlafmütze","Fünf Minuten noch … immer."],
-  ["Die Diva","Es muss schon etwas Besonderes sein."],
-  ["Die Streitschlichterin","Frieden wird notfalls erzwungen."],
-  ["Die Besserwisserin","Sie wusste es natürlich schon vorher."],
-  ["Die Verrückte","Vernunft hat heute frei."],
-  ["Die Perfektionistin","99 % sind einfach nicht genug."],
-  ["Die Abenteuerin","Heute wird irgendwas ausprobiert."],
-  ["Die Sarkastische","Natürlich. Genau das hat noch gefehlt."],
-  ["Die Süße","Unverschämt lieb und gefährlich harmlos."],
-  ["Die Bossin","Heute werden die Entscheidungen getroffen."],
-  ["Die Stille","Wenig Worte, maximaler Blick."],
-  ["Die Labertasche","Eine Geschichte führt zur nächsten."],
-  ["Die Detektivin","Nichts bleibt unentdeckt."],
-  ["Die Faulenzerin","Produktivität wurde erfolgreich abgesagt."],
-  ["Die Partymaus","Heute wird nicht früh geschlafen."],
-  ["Die Romantikerin","Heute ist alles irgendwie süß."],
-  ["Die Trollin","Hauptsache jemand verliert die Nerven."],
-  ["Die Psychologin","Alle Probleme werden analysiert."],
-  ["Die Mutige","Angst? Noch nie gehört."],
-  ["Die Eifersüchtige","Wer war das gerade?!"],
-  ["Die Glückspilzin","Heute läuft einfach alles."],
-  ["Die Böse","Heute gibt es keine Gnade."],
-  ["Die Unberechenbare","Niemand weiß, was als Nächstes passiert."]
+  ["Der Tryhard", "Maximal ernst spielen. Jeder Move wird optimiert und Fehler werden nicht akzeptiert."],
+  ["Der Troll", "Die anderen spielerisch ärgern, ohne wirklich toxisch zu werden."],
+  ["Der Flirty", "Charmant, frech und leicht flirtend kommentieren – auch mitten im Match."],
+  ["Der Freaky", "Komplett wilde, unerwartete Aussagen und Reaktionen raushauen."],
+  ["Der Shotcaller", "Alle Entscheidungen treffen und dem Team klare Ansagen geben."],
+  ["Der Bodyguard", "Eine bestimmte Person um jeden Preis beschützen und begleiten."],
+  ["Der Simp", "Eine Person übertrieben hypen, loben und unterstützen."],
+  ["Der Pazifist", "Kämpfe möglichst vermeiden und friedliche Lösungen suchen."],
+  ["Der Berserker", "Jeden möglichen Fight suchen und niemals zurückweichen."],
+  ["Der Loot-Goblin", "Alles einsammeln, was nicht festgeschraubt ist – Loot vor allem anderen."],
+  ["Der Speedrunner", "Alles so schnell wie möglich erledigen, ohne unnötige Umwege."],
+  ["Der Sniper", "Wo möglich auf Distanz bleiben und aus sicherer Position spielen."],
+  ["Der Messerheld", "Wenn das Spiel Nahkampf erlaubt: möglichst mit Nahkampfwaffen kämpfen."],
+  ["Der Risiko-Junkie", "Immer die riskantere Option wählen – je gefährlicher, desto besser."],
+  ["Der Support", "Den Fokus komplett auf die anderen legen: helfen, heilen, retten und absichern."],
+  ["Der Lone Wolf", "Möglichst alleine agieren und eigene Wege gehen."],
+  ["Der Clown", "Hauptsache Unterhaltung: absurde Aktionen und lustige Situationen erzeugen."],
+  ["Der Kommentator", "Das komplette Spiel wie ein Sportmoderator kommentieren."],
+  ["Der Coach", "Einen Mitspieler aktiv coachen und ihm während des Spiels Tipps geben."],
+  ["Der Anfänger", "Absichtlich wie ein kompletter Anfänger spielen und möglichst planlos wirken."],
+  ["Der Profi", "Übertrieben professionell auftreten, als wäre es ein großes E-Sport-Finale."],
+  ["Der Meme-Lord", "Fast ausschließlich mit Memes, Running Gags und passenden Sprüchen kommunizieren."],
+  ["Der Geheimagent", "Pläne geheim halten, mysteriös bleiben und Informationen nur teilweise preisgeben."],
+  ["Der Diplomat", "Streit vermeiden, verhandeln und versuchen, andere von sich zu überzeugen."],
+  ["Der Chaos-Spieler", "Entscheidungen möglichst zufällig treffen und den Plan ständig ändern."],
+  ["Der Ehrenmann", "Anderen helfen, selbst wenn es den eigenen Erfolg deutlich erschwert."],
+  ["Der Freche", "Besonders schlagfertig, frech und provokant auftreten."],
+  ["Der Romantiker", "Übertrieben romantische Kommentare und Komplimente einbauen."],
+  ["Der Eifersüchtige", "Spielerisch eifersüchtig reagieren, wenn jemand anderes Aufmerksamkeit bekommt."],
+  ["Der Unberechenbare", "Während der Runde ständig unerwartete Entscheidungen treffen und niemanden wissen lassen, was als Nächstes kommt."]
 ];
 
 const canvas=document.getElementById("wheel"), ctx=canvas.getContext("2d");
@@ -186,6 +249,7 @@ document.getElementById("spin").onclick=()=>{
       rotation=end;draw();
       spinCount++;
       localStorage.setItem("personalitySpinCount",spinCount);
+      document.getElementById("spinCount").textContent=spinCount;
       document.getElementById("winner").textContent=personalities[target][0];
       document.getElementById("desc").textContent=personalities[target][1];
 
@@ -193,7 +257,7 @@ document.getElementById("spin").onclick=()=>{
       if(spinCount % 10 === 0){
         const bonus=bonuses[(spinCount/10-1)%bonuses.length];
         setTimeout(()=>{
-          document.getElementById("winner").textContent="🎉 BONUS! "+bonus[0];
+          document.getElementById("winner").textContent="🎉 🎀 MOMMY-BONUS! "+bonus[0];
           document.getElementById("desc").textContent=bonus[1]+" (Spin #"+spinCount+")";
         },500);
       }
